@@ -9,13 +9,17 @@ export default function Navbar() {
       <h1 className="text-xl font-bold text-gray-800">Furniro Store</h1>
       <ul className="flex space-x-6 text-gray-700 font-medium">
         <li>
-          <Link href="/ContactPage" className="hover:text-blue-600 transition">
-            <FontAwesomeIcon icon={faPhone} title="Phone" /> Contact
+          <Link href="/Pages/ContactPage">
+            <span className="hover:text-blue-600 transition block">
+              <FontAwesomeIcon icon={faPhone} className="w-6 h-6" />
+            </span>
           </Link>
         </li>
         <li>
-          <Link href="/CartPage" className="hover:text-blue-600 transition">
-            <FontAwesomeIcon icon={faShoppingCart} title="Cart" /> Cart
+          <Link href="/Pages/CartPage">
+            <span className="hover:text-blue-600 transition block">
+              <FontAwesomeIcon icon={faShoppingCart} className="w-6 h-6" />
+            </span>
           </Link>
         </li>
       </ul>
