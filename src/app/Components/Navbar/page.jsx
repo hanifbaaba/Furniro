@@ -10,3 +10,7 @@ export default function Navbar() {
     </nav>
   );
 }
+{
+  /* <p>Add icons for the navbar items</p>;
+<p>and import cartpage and contactpage</p>; */
+}
