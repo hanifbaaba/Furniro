@@ -1,8 +1,9 @@
+// import Link from "next/link";
 export default function ProductPage() {
   return (
     <div>
-      <h1>Discover Our New Collection</h1>
-      <button>Shop now</button>
+      {/* <h1>Discover Our New Collection</h1>
+      <button>Shop now</button> */}
       {/* <p>Make a link to navigate to the products component</p> */}
       <div>
         <h1>Our Customer's top picks</h1>

@@ -1,4 +1,6 @@
+// import Link from "next/link";
 import Image from "next/image";
+// import products.json
 
 export default function ProductCard({
   name,
