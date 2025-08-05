@@ -1,15 +1,14 @@
-import Link from "next/link";
-// import ProductCard from "../ProductCard/page";
-// import products from "furniro/src/app/Components/products.json";
+import ProductCard from "../ProductCard/page";
 // import Link from "next/link";
+// import products from "../data/products.json";
+import products from "../../data/products.json";
+
 export default function ProductList() {
   return (
     <div>
-      {/* {ProductList.map((product) => (
+      {products.map((product) => (
         <ProductCard key={product.id} {...product} />
-      ))} */}
-
-      {/* <button></button> */}
+      ))}
     </div>
   );
 }

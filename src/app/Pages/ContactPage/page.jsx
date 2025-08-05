@@ -5,7 +5,7 @@ export default function ContactPage() {
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         <Link href="/">
           <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition mb-4">
-            Back to home
+            ← Back
           </button>
         </Link>
         <h1 className="text-2xl font-bold text-gray-800 mb-2">

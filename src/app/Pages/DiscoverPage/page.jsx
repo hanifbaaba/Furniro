@@ -5,7 +5,7 @@ export default function DiscoverPage() {
       <h1 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">
         Discover Our New Collection
       </h1>
-      <Link href="/ProductPage">
+      <Link href="/Pages/ProductCard">
         <button className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition">
           Shop now
         </button>
