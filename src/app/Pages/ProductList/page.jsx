@@ -1,11 +1,6 @@
-import ProductCard from "../ProductCard/page";
-// import Link from "next/link";
-// import products from "../data/products.json";
-import products from "../../data/products.json";
-
 export default function ProductList() {
   return (
-    <div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
       {products.map((product) => (
         <ProductCard key={product.id} {...product} />
       ))}
