@@ -1,5 +1,11 @@
+"use client";
+import React, { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
+import { useCart } from "@/app/context/CartContext/CartContext";
+
 export default function ProductsCard() {
+  const { addToCart } = useCart();
   const ProductsData = [
     {
       id: 1,
@@ -99,9 +105,17 @@ export default function ProductsCard() {
           <h3 className="text-base font-bold text-black-600 mt-2">
             Price: ${product.price}
           </h3>
-          <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+          <button
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+            onClick={() => addToCart(product)}
+          >
             Add to Cart
           </button>
+          <Link href="/Pages/CartPage">
+            <button className="mt-4 px-4 py-2 bg-gray-800 text-white rounded hover:bg-blue-700 transition">
+              View Cart
+            </button>
+          </Link>
         </div>
       ))}
     </div>

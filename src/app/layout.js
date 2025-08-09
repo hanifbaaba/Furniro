@@ -1,9 +1,14 @@
+"use client";
+
 import "./globals.css";
-import Link from "next/link";
+import { CartProvider } from "@/app/context/CartContext/CartContext";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <CartProvider>{children}</CartProvider>
+      </body>
     </html>
   );
 }
