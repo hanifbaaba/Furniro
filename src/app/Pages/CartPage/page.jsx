@@ -26,7 +26,7 @@ export default function CartPage() {
         {cart.length === 0 ? (
           <div className="px-6 py-12 text-center text-gray-500">
             <p className="mb-6">Your cart is currently empty.</p>
-            <Link href="/">
+            <Link href="/Pages/ProductsCard">
               <button className="bg-green-600 px-6 py-3 rounded-lg text-white hover:bg-green-700 transition">
                 Shop Now
               </button>

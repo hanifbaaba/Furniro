@@ -4,7 +4,7 @@ import { PaystackButton } from "react-paystack";
 
 export default function CheckoutPage() {
   const publicKey = "pk_test_245edf35f548e8aaf461b5df0d3501fc88793322";
-  const amount = 0;
+  const amount = 5000 * 100;
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -19,7 +19,7 @@ export default function CheckoutPage() {
     text: "Pay Now",
     onSuccess: () =>
       alert("Thanks for doing business with us! Come back soon!!"),
-    onClose: () => alert("Wait! You need this oil, don't go!!!!"),
+    onClose: () => alert("Payment Failed! Try again!"),
   };
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-5">
