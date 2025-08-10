@@ -71,9 +71,11 @@ export default function CartPage() {
                 Total: ${total}
               </p>
               <div className="flex gap-3">
-                <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-                  Proceed to Checkout
-                </button>
+                <Link href="/Pages/CheckoutPage">
+                  <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Proceed to Checkout
+                  </button>
+                </Link>
                 <Link href="/">
                   <button className="bg-gray-200 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition">
                     Continue Shopping
