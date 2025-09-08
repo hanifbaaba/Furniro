@@ -21,7 +21,7 @@ class ProductListView(viewsets.ModelViewSet):
 
 class CartCreateView(viewsets.ModelViewSet):
      queryset = Cart.objects.all()
-     serializer_class = ProductSerializer
+     serializer_class = CartSerializer
 
      def post(self,request, *args, **kwargs):
          """
@@ -31,15 +31,15 @@ class CartCreateView(viewsets.ModelViewSet):
 
 class CartListView(viewsets.ModelViewSet):
      queryset = Cart.objects.all()
-     serializer_class = ProductSerializer
+     serializer_class = CartSerializer
     
 
 class CartDeleteView(viewsets.ModelViewSet):
      queryset = Cart.objects.all()
-     serializer_class = ProductSerializer
+     serializer_class = CartSerializer
 
      def delete(self,request, *args, **kwargs):
          """
          DELETE /products/delete/ - Delete item in cart.
          """
-         return self.create(request, *args, **kwargs)
+         return self.destroy(request, *args, **kwargs)
