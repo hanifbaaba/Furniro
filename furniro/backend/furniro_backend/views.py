@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Product, Cart, Order, OrderItem
 from .serializers import ProductSerializer,CartSerializer, OrderSerializer, OrderItemSerializer
 from rest_framework import viewsets
-from rest_framework import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
