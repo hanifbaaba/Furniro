@@ -1,10 +1,9 @@
 from django.db import models
-from django.db import models
 from django.contrib.auth.models import User
 
-class Products(models.Model):
+class Product(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank = True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     color = models.CharField(max_length=100)
     # created_at = models.DateTimeField(auto_add=True)
@@ -16,8 +15,8 @@ class Products(models.Model):
         return self.name
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete= models.CASCADE)
-    product = models.ForeignKey(Products, on_delete = models.CASCADE)
+    user = models.ForeignKey(User, on_delete= models.CASCADE, related_name = 'cart')
+    product = models.ForeignKey(Product, on_delete = models.CASCADE)
     quantity = models.PositiveIntegerField(default = 1)
 
     def total_price(self):
@@ -29,7 +28,7 @@ class Order(models.Model):
         full_name = models.CharField(max_length=255)
         email = models.EmailField()
         shipping_address = models.TextField()
-        total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+        total_amount = models.DecimalField(max_digits=10, decimal_places=2, default = 0.00)
         # ordered_date = models.DateTimeField(auto_now_add=True)
 
         def __str__(self):
@@ -37,7 +36,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
         order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-        product_name = models.CharField(max_length=255)
+        product = models.ForeignKey(Product, on_delete = models.CASCADE, null=True, blank =True)
         quantity = models.PositiveIntegerField()
         price = models.DecimalField(max_digits=10, decimal_places=2)
 

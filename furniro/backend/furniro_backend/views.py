@@ -1,51 +1,29 @@
 from django.shortcuts import render
-from .models import Products, Cart
-from .serializers import ProductSerializer,CartSerializer
+from .models import Product, Cart, Order, OrderItem
+from .serializers import ProductSerializer,CartSerializer, OrderSerializer, OrderItemSerializer
 from rest_framework import viewsets
-# Create your views here.
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Products.objects.all()
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
-    def post(self,request, *args, **kwargs):
-         """
-         POST /products/create/ - Create a new product.
-         """
-         return self.create(request, *args, **kwargs)
-
-      def put(self,request, *args, **kwargs):
-         """
-         PUT /products/update/ - Updates a product.
-         """
-         return self.update(request, *args, **kwargs)
-     
-      def delete(self,request, *args, **kwargs):
-         """
-         DELETE /products/delete/ - Deletes a product.
-         """
-         return self.destroy(request, *args, **kwargs)
 
 
 class CartViewSet(viewsets.ModelViewSet):
      queryset = Cart.objects.all()
      serializer_class = CartSerializer
 
-     def post(self,request, *args, **kwargs):
-         """
-         POST /cart/create/ - Add Item to cart.
-         """
-         return self.create(request, *args, **kwargs)
-     
-      def put(self,request, *args, **kwargs):
-         """
-         PUT /cart/update/ - Update item in cart.
-         """
-         return self.update(request, *args, **kwargs)
-     
-      def delete(self,request, *args, **kwargs):
-         """
-         DELETE /cart/create/ - Delete item in cart
-         """
-         return self.destroy(request, *args, **kwargs)
 
+class OrderViewSet(viewsets.ModelViewSet):
+     queryset = Order.objects.all()
+     serializer_class = OrderSerializer
+     
+      def perform_create(self, serializer):
+        order = serializer.save()
+        total = sum(item.product.price * item.quantity for item in order.items.all())
+        order.total_amount = total
+        order.save()
+
+
+class OrderItemViewSet(viewsets.ModelViewSet):
+     queryset = OrderItem.objects.all()
+     serializer_class = OrderItemSerializer
