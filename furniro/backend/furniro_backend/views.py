@@ -2,20 +2,24 @@ from django.shortcuts import render
 from .models import Product, Cart, Order, OrderItem
 from .serializers import ProductSerializer,CartSerializer, OrderSerializer, OrderItemSerializer
 from rest_framework import viewsets
+from rest_framework import IsAuthenticated
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class CartViewSet(viewsets.ModelViewSet):
      queryset = Cart.objects.all()
      serializer_class = CartSerializer
+     permission_classes = [IsAuthenticated]
 
 
 class OrderViewSet(viewsets.ModelViewSet):
      queryset = Order.objects.all()
      serializer_class = OrderSerializer
+     permission_classes = [IsAuthenticated]
      
       def perform_create(self, serializer):
         order = serializer.save()
@@ -27,3 +31,4 @@ class OrderViewSet(viewsets.ModelViewSet):
 class OrderItemViewSet(viewsets.ModelViewSet):
      queryset = OrderItem.objects.all()
      serializer_class = OrderItemSerializer
+     permission_classes = [IsAuthenticated]
