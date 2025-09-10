@@ -18,9 +18,10 @@ class CartSerializer(serializers.ModelSerializer):
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
+    product_id = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), source="product", write_only=True)
     class Meta:
         model = OrderItem
-        fields = ['id','product','quantity', 'price']
+        fields = ['id','product','product_id','quantity', 'price']
         
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only=True)
@@ -37,7 +38,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password']
         
     def create(self,validated_data):
-        user = User.objects.create(
+        user = User.objects.create_user(
             username = validated_data['username'],
             email = validated_data['email'],
             password = validated_data['password']

@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate, login
 
-class UserRegistrationView(generics.CreateView):
+class UserRegistrationView(generics.CreateAPIView):
      queryset = User.objects.all()
      serializer_class = UserRegistrationSerializer
      
@@ -67,8 +67,7 @@ class OrderItemViewSet(viewsets.ModelViewSet):
      pagination_class = PageNumberPagination
      
      def get_queryset(self):
-          return OrderItem.objects.filter(order_user=self.request.user)
-     
+          return OrderItem.objects.filter(order__user=self.request.user)
     
 class StandardResultsSetPagination(PageNumberPagination):
      page_size = 10
