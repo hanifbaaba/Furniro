@@ -54,6 +54,10 @@ class OrderItem(models.Model):
             super().delete(*args, **kwargs)
             self.order.update_total()
 
-
         def __str__(self):
-            return f"{self.quantity} x {self.product_name} for Order {self.order.id}"
+            return f"{self.quantity} x {self.product.name} for Order {self.order.id}"
+        
+
+
+
+     
