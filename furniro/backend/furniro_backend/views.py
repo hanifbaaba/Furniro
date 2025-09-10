@@ -10,6 +10,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
+    
+   
 
 
 class CartViewSet(viewsets.ModelViewSet):
@@ -17,6 +19,12 @@ class CartViewSet(viewsets.ModelViewSet):
      serializer_class = CartSerializer
      permission_classes = [IsAuthenticated]
      pagination_class = PageNumberPagination
+     
+     def get_queryset(self):
+          return Cart.objects.filter(user=self.request.user)
+     
+     def perform_create(self, serializer):
+          return serializer.save(user=self.request.user)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
