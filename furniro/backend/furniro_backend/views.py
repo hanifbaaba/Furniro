@@ -9,23 +9,23 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = StandardResultsSetPagination
+    pagination_class = PageNumberPagination
 
 
 class CartViewSet(viewsets.ModelViewSet):
      queryset = Cart.objects.all()
      serializer_class = CartSerializer
      permission_classes = [IsAuthenticated]
-     pagination_class = StandardResultsSetPagination
+     pagination_class = PageNumberPagination
 
 
 class OrderViewSet(viewsets.ModelViewSet):
      queryset = Order.objects.all()
      serializer_class = OrderSerializer
      permission_classes = [IsAuthenticated]
-     pagination_class = StandardResultsSetPagination
+     pagination_class = PageNumberPagination
      
-      def perform_create(self, serializer):
+     def perform_create(self, serializer):
         order = serializer.save()
         total = sum(item.product.price * item.quantity for item in order.items.all())
         order.total_amount = total
@@ -36,7 +36,7 @@ class OrderItemViewSet(viewsets.ModelViewSet):
      queryset = OrderItem.objects.all()
      serializer_class = OrderItemSerializer
      permission_classes = [IsAuthenticated]
-     pagination_class = StandardResultsSetPagination
+     pagination_class = PageNumberPagination
      
 class StandardResultsSetPagination(PageNumberPagination):
      page_size = 10
