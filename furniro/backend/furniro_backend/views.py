@@ -77,3 +77,4 @@ class StandardResultsSetPagination(PageNumberPagination):
      max_page_size = 50
      
 
+# {"refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc1NzY4NDAyNiwiaWF0IjoxNzU3NTk3NjI2LCJqdGkiOiJlNzA4ZjM1NTNiYzM0M2QzOTlkOTllMzgxY2ExY2ZiYyIsInVzZXJfaWQiOiIyIn0.SDYCAJfhZHP1-t_ovCAmPRqOf6mAMymFDO-EPUYeZ28","access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3NTk3OTI2LCJpYXQiOjE3NTc1OTc2MjYsImp0aSI6IjM0ODVlOTEzYTUwNTQ4YTlhZTdmZGM1MDE4MGUzODk4IiwidXNlcl9pZCI6IjIifQ.PgY4u_pn4dCuzwAXA0UC-2bodtTZo-RfUmXt0E3CYkQ"}% 
