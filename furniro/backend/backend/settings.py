@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ['https://furniro-jxm9.onrender.com']
+ALLOWED_HOSTS = ["https://furniro-awcc.onrender.com"]
 
 
 # Application definition
