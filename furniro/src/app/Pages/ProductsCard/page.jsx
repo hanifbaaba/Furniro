@@ -1,11 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/app/context/CartContext/CartContext";
 import { ToastContainer, toast } from "react-toastify";
+import { apiFetch } from "@/app/Utils/api";
 
 export default function ProductsCard() {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    apiFetch("products/")
+      .then((data) => setProducts(data.results))
+      .catch((err) => console.error(err.message));
+  });
   const { addToCart } = useCart();
   const ProductsData = [
     {
