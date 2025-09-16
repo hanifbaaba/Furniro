@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { PaystackButton } from "react-paystack";
+import { apiFetch } from "@/app/Utils/api";
 
 export default function CheckoutPage() {
   const publicKey = "pk_test_245edf35f548e8aaf461b5df0d3501fc88793322";
@@ -8,6 +9,25 @@ export default function CheckoutPage() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+
+  const handleOrder = async () => {
+    try {
+      const order = await apiFetch("orders/", {
+        method: "POST",
+        body: JSON.stringify({
+          full_name: name,
+          email,
+          shipping_address: "Demo address", //
+        }),
+      });
+
+      alert("Order placed successfully!");
+      console.log("Order saved:", order);
+    } catch (err) {
+      alert("Payment went through, but saving order failed: " + err.message);
+    }
+  };
+
   const componentProps = {
     email,
     amount,
@@ -17,8 +37,10 @@ export default function CheckoutPage() {
     },
     publicKey,
     text: "Pay Now",
-    onSuccess: () =>
-      alert("Thanks for doing business with us! Come back soon!!"),
+    onSuccess: () => {
+      alert("Thanks for doing business with us! Come back soon!!");
+      handleOrder();
+    },
     onClose: () => alert("Payment Failed! Try again!"),
   };
   return (
