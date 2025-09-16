@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ["https://furniro-7nnb.onrender.com"]
+ALLOWED_HOSTS = ["furniro-7nnb.onrender.com"]
 
 
 # Application definition
@@ -57,13 +57,14 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+   
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -139,6 +140,8 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = ["https://furniro-7nnb.onrender.com"]
+
 
 
 # Default primary key field type
