@@ -28,6 +28,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-key")
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ["furniro-7nnb.onrender.com"]
+CORS_ALLOWED_ORIGINS = []
 
 
 # Application definition
