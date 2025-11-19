@@ -1,38 +1,28 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User
 from .models import Product, Cart, Order, OrderItem
 from .serializers import ProductSerializer,CartSerializer, OrderSerializer, OrderItemSerializer, UserRegistrationSerializer
-from rest_framework import viewsets, generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets, generics, status
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.pagination import PageNumberPagination
-from django.contrib.auth.models import User
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth import authenticate, login
-from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import PermissionDenied
+
+from django.http import HttpResponse
+
+def home(request):
+    return HttpResponse("Backend is running!")
+
 
 class UserRegistrationView(generics.CreateAPIView):
      queryset = User.objects.all()
      serializer_class = UserRegistrationSerializer
      permission_classes = [AllowAny]
      
-class LoginView(APIView):
-    def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
+#     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
     
 class CartViewSet(viewsets.ModelViewSet):
@@ -70,6 +60,23 @@ class OrderItemViewSet(viewsets.ModelViewSet):
      
      def get_queryset(self):
           return OrderItem.objects.filter(order__user=self.request.user)
+     
+     def perform_create(self, serializer):
+        order = serializer.validated_data.get["order"]
+        if order.user != self.request.user:
+            raise PermissionDenied("You cannot add items to someone else's order.")
+        serializer.save()
+
+     def perform_update(self, serializer):
+        order_item = self.get_object()
+        if order_item.order.user != self.request.user:
+            raise PermissionDenied("You cannot modify another user's order item.")
+        serializer.save()
+
+     def perform_destroy(self, instance):
+        if instance.order.user != self.request.user:
+            raise PermissionDenied("You cannot delete another user's order item.")
+        instance.delete()
     
 class StandardResultsSetPagination(PageNumberPagination):
      page_size = 10

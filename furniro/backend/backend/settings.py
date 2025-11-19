@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
+# import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,9 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ["furniro-7nnb.onrender.com"]
-CORS_ALLOWED_ORIGINS = []
+# DEBUG = os.getenv("DEBUG", "False") == "True"
+# remove this later
+DEBUG = True
+# ALLOWED_HOSTS = ["furniro-7nnb.onrender.com", "127.0.0.1", "localhost"]
+# remove this later
+ALLOWED_HOST = ["*"]
+
+# CORS_ALLOWED_ORIGINS = []
 
 
 # Application definition
@@ -40,11 +45,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.google',
     'furniro_backend',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders'
 ]
+SITE_ID = 1
+
+# AUTHENTICATION_BACKENDS = [
+#     'django.contrib.auth.backends.ModelBackend',  
+#     'allauth.account.auth_backends.AuthenticationBackend',  
+# ]
+
+LOGIN_REDIRECT_URL = '/'    
+LOGOUT_REDIRECT_URL = '/' 
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES" : (
@@ -94,15 +113,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / "db.sqlite3",
-#     }
-# }
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
+    }
 }
+# DATABASES = {
+#     'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
+# }
 
 
 # Password validation
@@ -147,7 +166,8 @@ CSRF_TRUSTED_ORIGINS = ["https://furniro-7nnb.onrender.com"]
 CORS_ALLOW_ALL_ORIGINS = True 
 
 
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

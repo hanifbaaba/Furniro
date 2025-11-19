@@ -18,6 +18,6 @@ router.register(r'order-items', OrderItemViewSet, basename='orderitem')
 urlpatterns = [
     path("register/", UserRegistrationView.as_view(), name="register"),
     path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("", include(router.urls)),  
 ]

@@ -120,9 +120,12 @@ export default function ProductsCard() {
             Add to Cart
           </button>
           <Link href="/Pages/CartPage">
-            <button className="mt-4 px-4 py-2 bg-gray-800 text-white rounded hover:bg-blue-700 transition">
+            <button className="mt-4 px-4 py-2 bg-red-800 text-white rounded hover:bg-blue-700 transition">
               View Cart
             </button>
+          </Link>
+          <Link href="/">
+            <button>back to home</button>
           </Link>
         </div>
       ))}
