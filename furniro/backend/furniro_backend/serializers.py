@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Cart, Order,OrderItem
+from .models import Product, Cart, Order,OrderItem, Payment
 from django.contrib.auth.models import User
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -63,4 +63,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         raise serializers.ValidationError("Email already exists")
       return value
 
+    
+class PaymentSerializer(serializers.Serializer):
+    class Meta:
+        model = Payment
+        fields = '__all__'
         
