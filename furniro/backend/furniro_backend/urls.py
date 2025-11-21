@@ -7,6 +7,7 @@ from .views import (
     CartViewSet,
     OrderItemViewSet,
     OrderViewSet,
+    PaystackWebhookView
 )
 
 router = DefaultRouter()
@@ -19,5 +20,6 @@ urlpatterns = [
     path("register/", UserRegistrationView.as_view(), name="register"),
     path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("webhook/", PaystackWebhookView.as_view()),
     path("", include(router.urls)),  
 ]

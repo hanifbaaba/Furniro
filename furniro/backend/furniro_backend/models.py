@@ -61,14 +61,12 @@ class OrderItem(models.Model):
             return f"{self.quantity} x {self.product.name} for Order {self.order.id}"
 
 class Payment(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
     email = models.EmailField(unique = True)
     amount  = models.DecimalField(max_digits = 10, decimal_places = 2)
+    status = models.CharField(max_length=20, default="pending")
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    paystack_ref = models.CharField(max_length= 100)
-    paid = models.BooleanField(default =False)
+    paystack_ref = models.CharField(max_length= 200, unique = True)
+
     
     class Meta:
         ordering = ['-created_at']
