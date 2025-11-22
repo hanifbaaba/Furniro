@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-# import dj_database_url
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,16 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-kyu&(!o5+30w*9i^-%%yg1pgy*xjwxzlxm=xed-@v1hu!*2)5m'
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-key")
-# SECURITY WARNING: don't run with debug turned on in production!
 
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-key")
 # DEBUG = os.getenv("DEBUG", "False") == "True"
 # remove this later
 DEBUG = True
 # ALLOWED_HOSTS = ["furniro-7nnb.onrender.com", "127.0.0.1", "localhost"]
 # remove this later
-ALLOWED_HOST = ["*"]
+ALLOWED_HOST = ["*",".onrender.com"]
 
 # CORS_ALLOWED_ORIGINS = []
 
@@ -54,7 +52,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    # 'paystack'
 ]
 SITE_ID = 1
 
@@ -114,16 +111,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",
-    }
-}
 # DATABASES = {
-#     'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / "db.sqlite3",
+#     }
 # }
-
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get("DATABASE_URL", "sqlite:///db.sqlite3"),
+        conn_max_age=600,
+        ssl_require=True
+        )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
