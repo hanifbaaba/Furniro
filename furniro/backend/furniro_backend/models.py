@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from decimal import Decimal
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField(blank = True)
+    description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     color = models.CharField(max_length=100)
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
@@ -30,7 +31,7 @@ class Order(models.Model):
         full_name = models.CharField(max_length=255)
         email = models.EmailField()
         shipping_address = models.TextField()
-        total_amount = models.DecimalField(max_digits=10, decimal_places=2, default = 0.00)
+        total_amount = models.DecimalField(max_digits=10, decimal_places=2, default = Decimal(0.00))
 
 
         def update_total(self):
@@ -48,14 +49,19 @@ class OrderItem(models.Model):
         price = models.DecimalField(max_digits=10, decimal_places=2,blank=True)
          
         def save(self, *args, **kwargs):
-            if not self.price:
+            if not self.price in (None, 0):
                 self.price = self.product.price
             super().save(*args, **kwargs)
-            self.order.update_total()
+            # self.order.update_total()
+            if self.order:
+                self.order.update_total()
 
         def delete(self, *args, **kwargs):
+            order = self.order
             super().delete(*args, **kwargs)
-            self.order.update_total()
+            if order:
+                order.update_total()
+            # self.order.update_total()
 
         def __str__(self):
             return f"{self.quantity} x {self.product.name} for Order {self.order.id}"

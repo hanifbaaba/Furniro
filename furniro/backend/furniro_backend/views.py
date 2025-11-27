@@ -1,8 +1,7 @@
-from django.shortcuts import render
 from django.contrib.auth.models import User
 from .models import Product, Cart, Order, OrderItem, Payment
 from .serializers import ProductSerializer,CartSerializer, OrderSerializer, OrderItemSerializer, UserRegistrationSerializer
-from rest_framework import viewsets, generics, status
+from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
@@ -24,7 +23,7 @@ class UserRegistrationView(generics.CreateAPIView):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-#     permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     pagination_class = PageNumberPagination
     
 class CartViewSet(viewsets.ModelViewSet):
@@ -38,7 +37,6 @@ class CartViewSet(viewsets.ModelViewSet):
      
      def perform_create(self, serializer):
           return serializer.save(user=self.request.user)
-
 
 class OrderViewSet(viewsets.ModelViewSet):
      queryset = Order.objects.all()
@@ -64,10 +62,10 @@ class OrderItemViewSet(viewsets.ModelViewSet):
           return OrderItem.objects.filter(order__user=self.request.user)
      
      def perform_create(self, serializer):
-        order = serializer.validated_data.get["order"]
-        if order.user != self.request.user:
+        order = serializer.validated_data.get("order")
+        if order and order.user != self.request.user:
             raise PermissionDenied("You cannot add items to someone else's order.")
-        serializer.save()
+        return serializer.save()
 
      def perform_update(self, serializer):
         order_item = self.get_object()
@@ -92,7 +90,7 @@ class InitializePaymentView(APIView):
 
         reference = str(uuid.uuid4())
 
-        Payment.objects.create(
+        payment = Payment.objects.create(
             email=email,
             amount=amount,
             reference=reference
@@ -105,7 +103,7 @@ class InitializePaymentView(APIView):
 
         data = {
             "email": email,
-            "amount": amount,
+            "amount": int(float(amount) * 100),
             "reference": reference,
             "callback_url": "http://localhost:3000/"
         }
@@ -114,7 +112,7 @@ class InitializePaymentView(APIView):
 
         response = requests.post(url, json=data, headers=headers).json()
 
-        return Response(response)
+        return Response(response.json(), status=response.status_code)
 
 class VerifyPaymentView(APIView):
     def get(self, request, reference):
@@ -124,38 +122,44 @@ class VerifyPaymentView(APIView):
             "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
         }
         response = requests.get(url, headers=headers).json()
-        payment = Payment.objects.get(reference=reference)
+        body = response.json()
+        try:
+            payment = Payment.objects.get(reference=reference)
+        except Payment.DoesNotExist:
+            return Response({"detail": "Payment not found"}, status=404)
 
-        if response["data"]["status"] == "success":
+        if body.get("data", {}).get("status") == "success":
             payment.status = "success"
         else:
             payment.status = "failed"
-
         payment.save()
+        return Response(body, status=response.status_code)
 
-        return Response(response)
-
+     
 class PaystackWebhookView(APIView):
-    def post(self, request):
+    permission_classes = [AllowAny] 
 
-        paystack_signature = request.headers.get('X-Paystack-Signature')
+    def post(self, request):
+        paystack_signature = request.headers.get("X-Paystack-Signature")
         body = request.body
 
         expected_signature = hmac.new(
             settings.PAYSTACK_SECRET_KEY.encode(),
             msg=body,
-            digestmod=hashlib.sha512
+            digestmod=hashlib.sha512,
         ).hexdigest()
 
         if paystack_signature != expected_signature:
             return HttpResponse(status=400)
 
-        data = json.loads(body)
-
+        data = json.loads(body.decode())
         event = data.get("event")
-        reference = data["data"]["reference"]
+        reference = data.get("data", {}).get("reference")
 
-        payment = Payment.objects.get(reference=reference)
+        try:
+            payment = Payment.objects.get(reference=reference)
+        except Payment.DoesNotExist:
+            return HttpResponse(status=404)
 
         if event == "charge.success":
             payment.status = "success"
@@ -163,5 +167,4 @@ class PaystackWebhookView(APIView):
             payment.status = "failed"
 
         payment.save()
-
         return HttpResponse(status=200)

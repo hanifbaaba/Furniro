@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,15 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-key")
-# DEBUG = os.getenv("DEBUG", "False") == "True"
-# remove this later
-DEBUG = True
-# ALLOWED_HOSTS = ["furniro-7nnb.onrender.com", "127.0.0.1", "localhost"]
-# remove this later
-ALLOWED_HOST = ["*",".onrender.com"]
-
-# CORS_ALLOWED_ORIGINS = []
-
+DEBUG = os.getenv("DEBUG", "False") == "True"
+ALLOWED_HOSTS =["*"]
 
 # Application definition
 
@@ -44,21 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.google',
     'furniro_backend',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
 ]
 SITE_ID = 1
-
-# AUTHENTICATION_BACKENDS = [
-#     'django.contrib.auth.backends.ModelBackend',  
-#     'allauth.account.auth_backends.AuthenticationBackend',  
-# ]
 
 LOGIN_REDIRECT_URL = '/'    
 LOGOUT_REDIRECT_URL = '/' 
@@ -76,14 +60,15 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+    
    
 ]
 
@@ -110,21 +95,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / "db.sqlite3",
-#     }
-# }
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL", "sqlite:///db.sqlite3"),
-        conn_max_age=600,
-        ssl_require=True
-        )
-}
+    "default": {
+          "ENGINE": "django_mongodb_backend",
+        
+          "NAME": "Furniro",
+          "CLIENT": {
+              "host": "mongodb+srv://baabahanif_db_user:LYzIDWAOWYMtkruj@furniro.g54guac.mongodb.net/?appName=Furniro",
+              'tls': True,
+            'tlsCAFile': '/Users/apple/Desktop/Furniro/env/lib/python3.12/site-packages/certifi/cacert.pem'
+          }
 
+    },
+}
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -163,7 +146,6 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-CSRF_TRUSTED_ORIGINS = ["https://furniro-7nnb.onrender.com"]
 CORS_ALLOW_ALL_ORIGINS = True 
 
 
@@ -172,7 +154,7 @@ MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django_mongodb_backend.fields.ObjectIdAutoField'
 PAYSTACK_SECRET_KEY =os.getenv("PAYSTACK_SECRET_KEY")
 PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
 PAYSTACK_BASE_URL = "https://api.paystack.co"

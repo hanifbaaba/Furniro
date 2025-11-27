@@ -9,6 +9,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
      total_price = serializers.SerializerMethodField()
+     user = serializers.PrimaryKeyRelatedField(read_only=True)
+
      class Meta:
         model = Cart
         fields = ['id', 'user', 'product' ,'quantity' ,'total_price']
@@ -19,23 +21,29 @@ class CartSerializer(serializers.ModelSerializer):
 class OrderItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     product_id = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), source="product", write_only=True)
+    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all(), required=False)
     class Meta:
         model = OrderItem
-        fields = ['id','product','product_id','quantity', 'price']
-        read_only_fields = ['price']
+        fields = ['id','product','product_id','quantity', 'price', 'order']
+        read_only_fields = ['price','product']
     
     def validate_quantity(self, value):
      if value < 1:
         raise serializers.ValidationError("Quantity must be at least 1")
      return value
+ 
+    def create(self, validated_data):
+        product = validated_data.pop("product")
+        order = validated_data.pop("order", None)
+        item = OrderItem.objects.create(product=product, order=order, **validated_data)
+        return item
 
-        
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only = True)
     class Meta:
         model = Order
         fields = ['id', 'user', 'full_name', 'email', 'shipping_address', 'total_amount', 'items']
-
+        read_only_fields = ["total_amount", "user"]
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only = True)
@@ -68,4 +76,5 @@ class PaymentSerializer(serializers.Serializer):
     class Meta:
         model = Payment
         fields = '__all__'
+        read_only_fields = ["status", "created_at"]
         
